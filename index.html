@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advantage – Business Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #8A6E32;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --dark2: #1A1A1A;
+    --dark3: #222222;
+    --white: #F5F2EC;
+    --white-dim: rgba(245,242,236,0.6);
+    --white-faint: rgba(245,242,236,0.1);
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width .2s, height .2s, opacity .2s;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform .12s ease, width .25s, height .25s;
+    opacity: 0.5;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 60px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.98), transparent);
+    transition: background .3s;
+  }
+  nav.scrolled { background: rgba(10,10,10,0.97); }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--gold); letter-spacing: 3px;
+    text-transform: uppercase; text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    color: var(--white-dim); text-decoration: none;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    transition: color .3s; cursor: none;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: transparent; border: 1px solid var(--gold);
+    color: var(--gold); padding: 10px 28px;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    cursor: none; transition: all .3s; font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 60px; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+  }
+  .hero-line {
+    position: absolute; top: 0; right: 200px; width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+    opacity: 0.3;
+  }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 28px;
+    animation: fadeUp .8s ease both;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(60px, 8vw, 110px);
+    font-weight: 300; line-height: 1.0;
+    color: var(--white); margin-bottom: 32px;
+    animation: fadeUp .9s .1s ease both;
+  }
+  .hero-title em { color: var(--gold); font-style: italic; }
+  .hero-sub {
+    font-size: 16px; color: var(--white-dim); max-width: 480px;
+    line-height: 1.8; margin-bottom: 52px;
+    animation: fadeUp 1s .2s ease both;
+  }
+  .hero-buttons { display: flex; gap: 20px; animation: fadeUp 1s .3s ease both; }
+  .btn-primary {
+    background: var(--gold); color: var(--black);
+    padding: 16px 40px; font-size: 13px;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; font-family: 'DM Sans', sans-serif;
+    font-weight: 500; transition: all .3s; cursor: none;
+    border: 1px solid var(--gold);
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-ghost {
+    background: transparent; color: var(--white);
+    padding: 16px 40px; font-size: 13px;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; font-family: 'DM Sans', sans-serif;
+    border: 1px solid rgba(245,242,236,0.2); cursor: none; transition: all .3s;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .hero-scroll {
+    position: absolute; bottom: 48px; left: 60px;
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--white-dim); display: flex; align-items: center; gap: 16px;
+    animation: fadeUp 1.2s .5s ease both;
+  }
+  .hero-scroll::before {
+    content: ''; display: block; width: 60px; height: 1px; background: var(--gold-dim);
+  }
+  .hero-number {
+    position: absolute; right: 60px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif; font-size: 180px;
+    color: rgba(201,168,76,0.04); font-weight: 700; letter-spacing: -10px;
+    pointer-events: none; user-select: none;
+    animation: fadeIn 1.5s ease both;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid rgba(201,168,76,0.2);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    overflow: hidden; padding: 18px 0; background: var(--dark);
+  }
+  .marquee-track {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-item {
+    display: inline-flex; align-items: center; gap: 40px;
+    font-size: 12px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold-dim); padding: 0 60px;
+  }
+  .marquee-item::after { content: '✦'; color: var(--gold); font-size: 10px; }
+
+  /* SECTION BASE */
+  section { padding: 120px 60px; }
+  .section-eyebrow {
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .section-eyebrow::before {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 64px); font-weight: 300;
+    line-height: 1.1; margin-bottom: 24px;
+  }
+  .section-title em { color: var(--gold); font-style: italic; }
+
+  /* ABOUT */
+  #about { background: var(--dark); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .about-visual {
+    position: relative; height: 500px;
+  }
+  .about-box {
+    position: absolute;
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+  .about-box-main {
+    width: 340px; height: 420px; top: 0; left: 0;
+    display: flex; align-items: flex-end; padding: 36px;
+    background: linear-gradient(135deg, var(--dark2) 0%, rgba(201,168,76,0.08) 100%);
+  }
+  .about-box-accent {
+    width: 180px; height: 200px; bottom: 0; right: 0;
+    background: var(--gold); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+  }
+  .about-box-accent .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px; font-weight: 700; color: var(--black); line-height: 1;
+  }
+  .about-box-accent .stat-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--black); opacity: 0.7;
+  }
+  .about-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-style: italic; color: var(--white); line-height: 1.5;
+  }
+  .about-text p {
+    color: var(--white-dim); line-height: 1.9; font-size: 15px; margin-bottom: 24px;
+  }
+  .about-pills { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .pill {
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 8px 20px; font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold);
+  }
+
+  /* SERVICES */
+  #services { background: var(--black); }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: rgba(201,168,76,0.15); margin-top: 60px;
+  }
+  .service-card {
+    background: var(--black); padding: 48px 40px;
+    position: relative; overflow: hidden; transition: background .4s;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px; background: var(--gold);
+    transform: scaleX(0); transform-origin: left; transition: transform .4s;
+  }
+  .service-card:hover { background: var(--dark2); }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 3px; color: var(--gold-dim); margin-bottom: 28px;
+  }
+  .service-icon {
+    font-size: 36px; margin-bottom: 24px; display: block;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 600; margin-bottom: 16px; color: var(--white);
+  }
+  .service-desc {
+    font-size: 14px; color: var(--white-dim); line-height: 1.8;
+  }
+  .service-link {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 28px; font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold); text-decoration: none; cursor: none;
+    transition: gap .3s;
+  }
+  .service-link:hover { gap: 18px; }
+
+  /* PROCESS */
+  #process { background: var(--dark); }
+  .process-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; margin-top: 60px; position: relative; }
+  .process-grid::before {
+    content: ''; position: absolute; top: 36px; left: 10%; right: 10%;
+    height: 1px; background: rgba(201,168,76,0.2);
+  }
+  .process-step { padding: 0 24px; text-align: center; }
+  .process-dot {
+    width: 72px; height: 72px; border: 1px solid var(--gold);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--gold);
+    background: var(--dark); position: relative; z-index: 1;
+    transition: background .3s;
+  }
+  .process-step:hover .process-dot { background: var(--gold); color: var(--black); }
+  .process-step h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px;
+    font-weight: 600; margin-bottom: 12px; color: var(--white);
+  }
+  .process-step p { font-size: 13px; color: var(--white-dim); line-height: 1.7; }
+
+  /* WHY US */
+  #why { background: var(--black); }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: rgba(201,168,76,0.1); margin-top: 60px; }
+  .why-item {
+    background: var(--black); padding: 48px;
+    display: flex; gap: 28px; transition: background .3s;
+  }
+  .why-item:hover { background: rgba(201,168,76,0.04); }
+  .why-item-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 56px;
+    color: rgba(201,168,76,0.12); font-weight: 700; flex-shrink: 0;
+    line-height: 1; margin-top: -8px;
+  }
+  .why-item-text h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    margin-bottom: 12px; color: var(--white);
+  }
+  .why-item-text p { font-size: 14px; color: var(--white-dim); line-height: 1.8; }
+
+  /* TESTIMONIALS */
+  #testimonials { background: var(--dark); overflow: hidden; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; margin-top: 60px; }
+  .testi-card {
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,0.12); padding: 40px;
+    position: relative;
+  }
+  .testi-card::before {
+    content: '"';
+    position: absolute; top: 20px; right: 32px;
+    font-family: 'Cormorant Garamond', serif; font-size: 80px;
+    color: rgba(201,168,76,0.15); line-height: 1;
+  }
+  .testi-stars { color: var(--gold); font-size: 14px; margin-bottom: 20px; letter-spacing: 2px; }
+  .testi-text {
+    font-family: 'Cormorant Garamond', serif; font-size: 18px;
+    font-style: italic; color: var(--white); line-height: 1.7; margin-bottom: 28px;
+  }
+  .testi-author { display: flex; align-items: center; gap: 14px; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500; color: var(--black);
+  }
+  .testi-name { font-size: 14px; font-weight: 500; color: var(--white); }
+  .testi-role { font-size: 12px; color: var(--gold-dim); letter-spacing: 1px; margin-top: 2px; }
+
+  /* STATS */
+  #stats {
+    background: var(--gold); padding: 80px 60px;
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
+    border-top: none; border-bottom: none;
+  }
+  .stat-item { text-align: center; padding: 20px; }
+  .stat-item-num {
+    font-family: 'Cormorant Garamond', serif; font-size: 72px;
+    font-weight: 700; color: var(--black); line-height: 1;
+  }
+  .stat-item-label { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: rgba(0,0,0,0.6); margin-top: 8px; }
+  .stat-divider { width: 1px; background: rgba(0,0,0,0.15); margin: 20px 0; }
+
+  /* CONTACT */
+  #contact { background: var(--black); display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
+  .contact-info p { color: var(--white-dim); font-size: 15px; line-height: 1.9; margin-bottom: 40px; }
+  .contact-details { display: flex; flex-direction: column; gap: 24px; }
+  .contact-item { display: flex; align-items: flex-start; gap: 16px; }
+  .contact-item-icon {
+    width: 40px; height: 40px; border: 1px solid rgba(201,168,76,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; color: var(--gold);
+  }
+  .contact-item-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 4px; }
+  .contact-item-val { font-size: 14px; color: var(--white); }
+  .contact-form { display: flex; flex-direction: column; gap: 20px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim);
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    background: var(--dark2); border: 1px solid rgba(201,168,76,0.15);
+    color: var(--white); padding: 14px 18px; font-size: 14px;
+    font-family: 'DM Sans', sans-serif; outline: none; cursor: none;
+    transition: border-color .3s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-group select option { background: var(--dark2); }
+  .form-submit {
+    background: var(--gold); color: var(--black); border: none;
+    padding: 16px 48px; font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase; cursor: none; font-family: 'DM Sans', sans-serif;
+    font-weight: 500; transition: all .3s; align-self: flex-start;
+  }
+  .form-submit:hover { background: var(--gold-light); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 60px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;
+  }
+  .footer-brand .logo {
+    font-family: 'Cormorant Garamond', serif; font-size: 28px;
+    font-weight: 700; color: var(--gold); letter-spacing: 3px;
+    text-transform: uppercase; text-decoration: none; display: block; margin-bottom: 16px;
+  }
+  .footer-brand p { font-size: 13px; color: var(--white-dim); line-height: 1.8; max-width: 280px; }
+  .footer-col h4 {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col a {
+    font-size: 13px; color: var(--white-dim); text-decoration: none; cursor: none; transition: color .3s;
+  }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom {
+    background: var(--dark); border-top: 1px solid rgba(201,168,76,0.08);
+    padding: 24px 60px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p { font-size: 12px; color: rgba(245,242,236,0.3); letter-spacing: 1px; }
+
+  /* MOBILE NAV */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; padding: 8px; }
+  .hamburger span { width: 24px; height: 1px; background: var(--gold); display: block; transition: all .3s; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 80px 24px; }
+    #hero { padding: 0 24px; }
+    .hero-title { font-size: 52px; }
+    #about { grid-template-columns: 1fr; }
+    .about-visual { height: 300px; display: none; }
+    .services-grid { grid-template-columns: 1fr; }
+    .process-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .process-grid::before { display: none; }
+    .why-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    #stats { grid-template-columns: 1fr 1fr; padding: 60px 24px; }
+    #contact { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr 1fr; padding: 40px 24px; }
+    .footer-bottom { padding: 20px 24px; flex-direction: column; gap: 8px; }
+    .hero-number { display: none; }
+    .hero-scroll { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Advantage</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#testimonials">Results</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get in Touch</a>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+  <div class="hero-number">A</div>
+  <p class="hero-eyebrow">Strategic Business Consulting</p>
+  <h1 class="hero-title">Your Business.<br>Our <em>Strategy.</em><br>Unlimited Growth.</h1>
+  <p class="hero-sub">Advantage transforms businesses through data-driven insights, strategic clarity, and execution excellence — helping leaders unlock their true potential.</p>
+  <div class="hero-buttons">
+    <a href="#services" class="btn-primary">Explore Services</a>
+    <a href="#contact" class="btn-ghost">Free Consultation</a>
+  </div>
+  <div class="hero-scroll">Scroll to discover</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Business Strategy</div>
+    <div class="marquee-item">Growth Consulting</div>
+    <div class="marquee-item">Market Expansion</div>
+    <div class="marquee-item">Financial Advisory</div>
+    <div class="marquee-item">Operations Excellence</div>
+    <div class="marquee-item">Leadership Coaching</div>
+    <div class="marquee-item">Digital Transformation</div>
+    <div class="marquee-item">Risk Management</div>
+    <div class="marquee-item">Business Strategy</div>
+    <div class="marquee-item">Growth Consulting</div>
+    <div class="marquee-item">Market Expansion</div>
+    <div class="marquee-item">Financial Advisory</div>
+    <div class="marquee-item">Operations Excellence</div>
+    <div class="marquee-item">Leadership Coaching</div>
+    <div class="marquee-item">Digital Transformation</div>
+    <div class="marquee-item">Risk Management</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual">
+    <div class="about-box about-box-main">
+      <p class="about-quote">"We don't just advise — we partner in your journey to excellence."</p>
+    </div>
+    <div class="about-box about-box-accent">
+      <span class="stat-num">10+</span>
+      <span class="stat-label">Years of Edge</span>
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <p class="section-eyebrow">Who We Are</p>
+    <h2 class="section-title">Built on <em>Expertise,</em> Driven by Results</h2>
+    <p>Advantage was founded with one mission: to give businesses the strategic edge they need to outperform the competition. We combine deep industry knowledge with a hands-on approach to deliver measurable outcomes.</p>
+    <p>From startups finding their footing to established enterprises seeking transformation — we bring clarity, direction, and execution strength to every engagement.</p>
+    <div class="about-pills">
+      <span class="pill">Strategic Thinking</span>
+      <span class="pill">Data-Led Decisions</span>
+      <span class="pill">Execution Focused</span>
+      <span class="pill">People-First</span>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="reveal">
+    <p class="section-eyebrow">What We Offer</p>
+    <h2 class="section-title">Services That Move <em>Businesses</em> Forward</h2>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <span class="service-icon">🎯</span>
+      <h3 class="service-name">Business Strategy</h3>
+      <p class="service-desc">We craft clear, actionable strategies that align your vision with market realities. From competitive positioning to long-term roadmaps, we build the blueprint for your success.</p>
+      <a href="#contact" class="service-link">Learn More →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <span class="service-icon">📈</span>
+      <h3 class="service-name">Growth Advisory</h3>
+      <p class="service-desc">Identify and capture new revenue opportunities. We analyze markets, optimize your sales engine, and build scalable growth systems that compound over time.</p>
+      <a href="#contact" class="service-link">Learn More →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <span class="service-icon">⚙️</span>
+      <h3 class="service-name">Operations Excellence</h3>
+      <p class="service-desc">Streamline processes, eliminate inefficiencies, and build lean operations. We help you do more with less — without compromising quality or culture.</p>
+      <a href="#contact" class="service-link">Learn More →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <span class="service-icon">💰</span>
+      <h3 class="service-name">Financial Advisory</h3>
+      <p class="service-desc">From financial modelling to fundraising strategy, we ensure your business has the financial foundation and investor narrative to achieve its ambitions.</p>
+      <a href="#contact" class="service-link">Learn More →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <span class="service-icon">🌐</span>
+      <h3 class="service-name">Market Expansion</h3>
+      <p class="service-desc">Break into new markets with confidence. We provide deep market research, entry strategies, and on-ground support to make expansion seamless and profitable.</p>
+      <a href="#contact" class="service-link">Learn More →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <span class="service-icon">👥</span>
+      <h3 class="service-name">Leadership Coaching</h3>
+      <p class="service-desc">The best strategy means nothing without strong leadership. We coach executives and teams to lead with clarity, decisiveness, and authentic authority.</p>
+      <a href="#contact" class="service-link">Learn More →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="reveal">
+    <p class="section-eyebrow">How We Work</p>
+    <h2 class="section-title">Our <em>Proven</em> 4-Step Process</h2>
+  </div>
+  <div class="process-grid reveal">
+    <div class="process-step">
+      <div class="process-dot">01</div>
+      <h3>Discovery</h3>
+      <p>Deep-dive into your business, goals, challenges, and competitive landscape to understand the full picture.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-dot">02</div>
+      <h3>Strategy</h3>
+      <p>Develop a tailored, data-backed strategic plan with clear priorities, milestones, and success metrics.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-dot">03</div>
+      <h3>Execution</h3>
+      <p>Work side-by-side with your team to implement changes, manage transitions, and maintain momentum.</p>
+    </div>
+    <div class="process-step">
+      <div class="process-dot">04</div>
+      <h3>Growth</h3>
+      <p>Track outcomes, optimize continuously, and scale what works — ensuring lasting, compounding results.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="reveal">
+    <p class="section-eyebrow">Why Advantage</p>
+    <h2 class="section-title">The <em>Difference</em> You'll Feel</h2>
+  </div>
+  <div class="why-grid reveal">
+    <div class="why-item">
+      <div class="why-item-num">01</div>
+      <div class="why-item-text">
+        <h3>Senior-Led Engagement</h3>
+        <p>Every project is led by seasoned consultants, not handed to junior analysts. You get our best minds on your biggest challenges — always.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-item-num">02</div>
+      <div class="why-item-text">
+        <h3>Measurable Outcomes</h3>
+        <p>We don't believe in vague recommendations. Every engagement comes with clear KPIs and accountability to ensure real, quantifiable results.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-item-num">03</div>
+      <div class="why-item-text">
+        <h3>Industry Agnostic</h3>
+        <p>Our methodologies work across sectors. Whether you're in manufacturing, services, tech, or retail — we adapt our approach to your world.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-item-num">04</div>
+      <div class="why-item-text">
+        <h3>Long-Term Partnership</h3>
+        <p>We think beyond the project. Our clients return because we invest in your long-term success and treat your goals as our own.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stat-item">
+    <div class="stat-item-num">200+</div>
+    <div class="stat-item-label">Clients Served</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-item-num">96%</div>
+    <div class="stat-item-label">Client Retention</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-item-num">₹50Cr+</div>
+    <div class="stat-item-label">Revenue Unlocked</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-item-num">10+</div>
+    <div class="stat-item-label">Years of Excellence</div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="reveal">
+    <p class="section-eyebrow">Client Stories</p>
+    <h2 class="section-title">Results That <em>Speak</em> for Themselves</h2>
+  </div>
+  <div class="testimonials-grid reveal">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">Advantage completely transformed how we approach our market strategy. Within 8 months, we doubled our revenue and expanded into two new cities.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">RK</div>
+        <div>
+          <div class="testi-name">Rajesh Kumar</div>
+          <div class="testi-role">Founder, TechNova Solutions</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">The operational overhaul they led saved us 30% in costs while improving our delivery timelines. Truly exceptional consultants who understand business deeply.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">PS</div>
+        <div>
+          <div class="testi-name">Priya Sharma</div>
+          <div class="testi-role">COO, RetailFirst Group</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">Their financial advisory helped us raise our Series A with confidence. The investor narrative they built was pitch-perfect. We closed in 6 weeks.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">AM</div>
+        <div>
+          <div class="testi-name">Arjun Mehta</div>
+          <div class="testi-role">CEO, FinBridge Capital</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-info reveal">
+    <p class="section-eyebrow">Get In Touch</p>
+    <h2 class="section-title">Let's Build Your <em>Advantage</em></h2>
+    <p>Ready to transform your business? Let's start with a conversation. We offer a complimentary 45-minute strategy session to explore how we can create measurable impact for you.</p>
+    <div class="contact-details">
+      <div class="contact-item">
+        <div class="contact-item-icon">📍</div>
+        <div>
+          <div class="contact-item-label">Office</div>
+          <div class="contact-item-val">Your City, India</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📧</div>
+        <div>
+          <div class="contact-item-label">Email</div>
+          <div class="contact-item-val">hello@advantage.in</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📞</div>
+        <div>
+          <div class="contact-item-label">Phone</div>
+          <div class="contact-item-val">+91 98765 43210</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="contact-form reveal">
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" placeholder="Your first name">
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" placeholder="Your last name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label>Company Name</label>
+      <input type="text" placeholder="Your company">
+    </div>
+    <div class="form-group">
+      <label>Service Interested In</label>
+      <select>
+        <option>Business Strategy</option>
+        <option>Growth Advisory</option>
+        <option>Operations Excellence</option>
+        <option>Financial Advisory</option>
+        <option>Market Expansion</option>
+        <option>Leadership Coaching</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Tell Us About Your Challenge</label>
+      <textarea placeholder="Briefly describe what you're looking to achieve..."></textarea>
+    </div>
+    <button class="form-submit" onclick="handleSubmit()">Send Message</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="logo">Advantage</a>
+    <p>Strategic consulting that delivers measurable impact. We partner with ambitious businesses to unlock growth, efficiency, and lasting competitive advantage.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Services</h4>
+    <ul>
+      <li><a href="#services">Business Strategy</a></li>
+      <li><a href="#services">Growth Advisory</a></li>
+      <li><a href="#services">Operations</a></li>
+      <li><a href="#services">Financial Advisory</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <ul>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#process">Our Process</a></li>
+      <li><a href="#testimonials">Case Studies</a></li>
+      <li><a href="#contact">Careers</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Connect</h4>
+    <ul>
+      <li><a href="#">LinkedIn</a></li>
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2025 Advantage Consulting. All rights reserved.</p>
+  <p>Crafted with purpose. Built for growth.</p>
+</div>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+function animateRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animateRing); }
+animateRing();
+document.querySelectorAll('a, button').forEach(el => { el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2)'; ring.style.transform = 'translate(-50%,-50%) scale(1.5)'; }); el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; }); });
+
+// Navbar scroll
+window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60); });
+
+// Reveal on scroll
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 });
+revealEls.forEach(el => observer.observe(el));
+
+// Form submit
+function handleSubmit() {
+  const btn = document.querySelector('.form-submit');
+  btn.textContent = 'Message Sent ✓';
+  btn.style.background = '#4CAF50';
+  btn.style.color = '#fff';
+  setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; btn.style.color = ''; }, 3000);
+}
+
+// Mobile menu (simple toggle)
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+hamburger.addEventListener('click', () => {
+  navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+  navLinks.style.flexDirection = 'column';
+  navLinks.style.position = 'absolute';
+  navLinks.style.top = '70px'; navLinks.style.right = '24px';
+  navLinks.style.background = 'rgba(10,10,10,0.97)';
+  navLinks.style.padding = '20px 30px'; navLinks.style.gap = '20px';
+  navLinks.style.border = '1px solid rgba(201,168,76,0.2)';
+});
+</script>
+</body>
+</html>
