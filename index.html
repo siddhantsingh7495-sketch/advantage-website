@@ -183,9 +183,7 @@
 
   /* ABOUT */
   #about { background: var(--dark); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-  .about-visual {
-    position: relative; height: 500px;
-  }
+  .about-visual { position: relative; height: 500px; }
   .about-box {
     position: absolute;
     background: var(--dark2);
@@ -243,16 +241,12 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 11px; letter-spacing: 3px; color: var(--gold-dim); margin-bottom: 28px;
   }
-  .service-icon {
-    font-size: 36px; margin-bottom: 24px; display: block;
-  }
+  .service-icon { font-size: 36px; margin-bottom: 24px; display: block; }
   .service-name {
     font-family: 'Cormorant Garamond', serif;
     font-size: 26px; font-weight: 600; margin-bottom: 16px; color: var(--white);
   }
-  .service-desc {
-    font-size: 14px; color: var(--white-dim); line-height: 1.8;
-  }
+  .service-desc { font-size: 14px; color: var(--white-dim); line-height: 1.8; }
   .service-link {
     display: inline-flex; align-items: center; gap: 10px;
     margin-top: 28px; font-size: 12px; letter-spacing: 2px;
@@ -336,7 +330,6 @@
   #stats {
     background: var(--gold); padding: 80px 60px;
     display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
-    border-top: none; border-bottom: none;
   }
   .stat-item { text-align: center; padding: 20px; }
   .stat-item-num {
@@ -344,7 +337,6 @@
     font-weight: 700; color: var(--black); line-height: 1;
   }
   .stat-item-label { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: rgba(0,0,0,0.6); margin-top: 8px; }
-  .stat-divider { width: 1px; background: rgba(0,0,0,0.15); margin: 20px 0; }
 
   /* CONTACT */
   #contact { background: var(--black); display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
@@ -380,6 +372,19 @@
     font-weight: 500; transition: all .3s; align-self: flex-start;
   }
   .form-submit:hover { background: var(--gold-light); }
+  .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* Toast notification */
+  .toast {
+    position: fixed; bottom: 40px; right: 40px; z-index: 9999;
+    padding: 18px 32px; font-size: 14px; letter-spacing: 1px;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.4s ease; pointer-events: none;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .toast.success { background: var(--gold); color: var(--black); }
+  .toast.error { background: #c0392b; color: #fff; }
+  .toast.show { transform: translateY(0); opacity: 1; }
 
   /* FOOTER */
   footer {
@@ -448,6 +453,9 @@
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <!-- NAV -->
 <nav id="navbar">
@@ -742,25 +750,25 @@
   <div class="contact-form reveal">
     <div class="form-row">
       <div class="form-group">
-        <label>First Name</label>
-        <input type="text" placeholder="Your first name">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" placeholder="Your first name">
       </div>
       <div class="form-group">
-        <label>Last Name</label>
-        <input type="text" placeholder="Your last name">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" placeholder="Your last name">
       </div>
     </div>
     <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" placeholder="your@email.com">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="your@email.com">
     </div>
     <div class="form-group">
-      <label>Company Name</label>
-      <input type="text" placeholder="Your company">
+      <label for="company">Company Name</label>
+      <input type="text" id="company" placeholder="Your company">
     </div>
     <div class="form-group">
-      <label>Service Interested In</label>
-      <select>
+      <label for="service">Service Interested In</label>
+      <select id="service">
         <option>Business Strategy</option>
         <option>Growth Advisory</option>
         <option>Operations Excellence</option>
@@ -770,10 +778,10 @@
       </select>
     </div>
     <div class="form-group">
-      <label>Tell Us About Your Challenge</label>
-      <textarea placeholder="Briefly describe what you're looking to achieve..."></textarea>
+      <label for="message">Tell Us About Your Challenge</label>
+      <textarea id="message" placeholder="Briefly describe what you're looking to achieve..."></textarea>
     </div>
-    <button class="form-submit" onclick="handleSubmit()">Send Message</button>
+    <button class="form-submit" id="submitBtn" onclick="handleSubmit()">Send Message</button>
   </div>
 </section>
 
@@ -816,38 +824,128 @@
   <p>Crafted with purpose. Built for growth.</p>
 </div>
 
+<!-- Load Supabase config -->
+<script src="script.js"></script>
+
 <script>
-// Custom cursor
+// =============================================
+// Custom Cursor
+// =============================================
 const cursor = document.getElementById('cursor');
 const ring = document.getElementById('cursorRing');
 let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
-function animateRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animateRing); }
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+});
+function animateRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
 animateRing();
-document.querySelectorAll('a, button').forEach(el => { el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2)'; ring.style.transform = 'translate(-50%,-50%) scale(1.5)'; }); el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; }); });
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+    ring.style.transform = 'translate(-50%,-50%) scale(1.5)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+    ring.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
+});
 
+// =============================================
 // Navbar scroll
-window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60); });
+// =============================================
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
 
+// =============================================
 // Reveal on scroll
+// =============================================
 const revealEls = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 });
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
 revealEls.forEach(el => observer.observe(el));
 
-// Form submit
-function handleSubmit() {
-  const btn = document.querySelector('.form-submit');
-  btn.textContent = 'Message Sent ✓';
-  btn.style.background = '#4CAF50';
-  btn.style.color = '#fff';
-  setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; btn.style.color = ''; }, 3000);
+// =============================================
+// Toast notification
+// =============================================
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = (type === 'success' ? '✓ ' : '✗ ') + message;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => { toast.className = 'toast'; }, 4000);
 }
 
-// Mobile menu (simple toggle)
+// =============================================
+// Contact Form Submit → Supabase
+// =============================================
+async function handleSubmit() {
+  const btn = document.getElementById('submitBtn');
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const company = document.getElementById('company').value.trim();
+  const service = document.getElementById('service').value;
+  const message = document.getElementById('message').value.trim();
+
+  // Basic validation
+  if (!firstName || !email || !message) {
+    showToast('Please fill in Name, Email and Message.', 'error');
+    return;
+  }
+
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    await saveContact({
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      company: company,
+      service: service,
+      message: message
+    });
+
+    showToast('Message sent! We will contact you soon.');
+    // Clear form
+    document.getElementById('firstName').value = '';
+    document.getElementById('lastName').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('company').value = '';
+    document.getElementById('message').value = '';
+
+    btn.textContent = 'Message Sent ✓';
+    btn.style.background = '#2ecc71';
+    setTimeout(() => {
+      btn.textContent = 'Send Message';
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 3000);
+
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong. Please try again.', 'error');
+    btn.textContent = 'Send Message';
+    btn.disabled = false;
+  }
+}
+
+// =============================================
+// Mobile menu
+// =============================================
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
 hamburger.addEventListener('click', () => {
-  navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+  const isOpen = navLinks.style.display === 'flex';
+  navLinks.style.display = isOpen ? 'none' : 'flex';
   navLinks.style.flexDirection = 'column';
   navLinks.style.position = 'absolute';
   navLinks.style.top = '70px'; navLinks.style.right = '24px';
